@@ -115,6 +115,8 @@ namespace XLua
                 AddBuildin("socket.core", StaticLuaCallbacks.LoadSocketCore);
                 AddBuildin("socket", StaticLuaCallbacks.LoadSocketCore);
 #endif
+                AddBuildin("pb", LuaAPI.LoadLuaProfobuf);
+                AddBuildin("rapidjson", LuaAPI.LoadRapidJson);
 
                 AddBuildin("CS", StaticLuaCallbacks.LoadCS);
 
