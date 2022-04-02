@@ -1,0 +1,19 @@
+local rapidjson = require("rapidjson")
+
+local jsonStr = [[
+{
+    "name":"runoob",
+    "alexa":10000,
+    "sites": {
+        "site1":"www.runoob.com",
+        "site2":"m.runoob.com",
+        "site3":"c.runoob.com"
+    }
+}
+]];
+
+local value = rapidjson.decode(jsonStr);
+CS.UnityEngine.Debug.Log(value.name);
+
+local valueStr = rapidjson.encode(value);
+CS.UnityEngine.Debug.Log(valueStr)
