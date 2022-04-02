@@ -2,6 +2,8 @@
 /Library
 /ProjectSettings
 /Temp
+/Logs
+/obj
 /Assets/XLua/Gen
 /Assets/XLua/Gen.meta
 Assets/StreamingAssets.meta
@@ -10,6 +12,7 @@ Assets/xLuaTest.meta
 Assets/xLuaTest/
 /*.csproj
 /*.sln
+.vsconfig
 /build/build*
 UnityVS
 /Assets/UnityVS.meta
