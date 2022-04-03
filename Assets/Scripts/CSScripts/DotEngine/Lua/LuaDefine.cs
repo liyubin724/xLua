@@ -1,4 +1,4 @@
-﻿namespace LuaEngine
+﻿namespace DotEngine.Lua
 {
     public static class LuaDefine
     {

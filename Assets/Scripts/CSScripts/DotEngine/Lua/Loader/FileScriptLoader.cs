@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     public class FileScriptLoader : ALuaScriptLoader
     {

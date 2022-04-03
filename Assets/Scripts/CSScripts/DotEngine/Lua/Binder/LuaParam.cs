@@ -3,7 +3,7 @@ using UnityEngine;
 using SystemObject = System.Object;
 using UnityObject = UnityEngine.Object;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     public enum LuaParamType
     {

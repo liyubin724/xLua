@@ -4,7 +4,7 @@ using UnityEngine;
 using XLua;
 using SystemObject = System.Object;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     [Serializable]
     public class LuaParamGroup
@@ -42,7 +42,7 @@ namespace LuaEngine
                 }
                 else
                 {
-                    Debug.LogError("LuaObjectBehaviour::OnInitFinished->the group or the name of group is null")
+                    Debug.LogError("LuaObjectBehaviour::OnInitFinished->the group or the name of group is null");
                 }
             }
         }

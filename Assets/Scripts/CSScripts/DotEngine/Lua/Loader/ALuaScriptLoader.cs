@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     public abstract class ALuaScriptLoader
     {

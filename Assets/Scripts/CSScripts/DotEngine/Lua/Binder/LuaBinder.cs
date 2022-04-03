@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XLua;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     [Serializable]
     public class LuaBinder

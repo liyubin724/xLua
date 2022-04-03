@@ -3,7 +3,7 @@ using UnityEngine;
 using XLua;
 using SystemObject = System.Object;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     public class LuaBinderBehaviour : MonoBehaviour
     {

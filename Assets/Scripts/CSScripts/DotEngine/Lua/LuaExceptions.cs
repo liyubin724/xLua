@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LuaEngine
+namespace DotEngine.Lua
 {
     public class LuaEnvInvalidException : Exception
     {
