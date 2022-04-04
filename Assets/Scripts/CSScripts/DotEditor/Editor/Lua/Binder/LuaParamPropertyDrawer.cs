@@ -1,10 +1,6 @@
 ﻿using DotEditor.Utilities;
 using DotEngine.Lua;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityObject = UnityEngine.Object;
@@ -49,12 +45,12 @@ namespace DotEditor.Lua
                 propertyDrawRect.x += 40;
                 propertyDrawRect.width -= 40;
             }
-
             SerializedProperty nameProperty = property.FindPropertyRelative("name");
+            SerializedProperty typeProperty = property.FindPropertyRelative("paramType");
+
             EditorGUI.PropertyField(propertyDrawRect, nameProperty);
 
             propertyDrawRect.y += propertyDrawRect.height;
-            SerializedProperty typeProperty = property.FindPropertyRelative("paramType");
             EditorGUI.PropertyField(propertyDrawRect, typeProperty);
 
             LuaParamType paramType = (LuaParamType)typeProperty.intValue;
@@ -86,6 +82,11 @@ namespace DotEditor.Lua
                 }
                 else
                 {
+                    if(string.IsNullOrEmpty(nameProperty.stringValue))
+                    {
+                        nameProperty.stringValue = gObjectProperty.objectReferenceValue.name;
+                    }
+
                     if (uObjectProperty.objectReferenceValue == null)
                     {
                         uObjectProperty.objectReferenceValue = gObjectProperty.objectReferenceValue;
