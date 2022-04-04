@@ -64,6 +64,42 @@ namespace DotEngine.Lua
         private Action<float, float> m_UpdateAction = null;
         private Action<float, float> m_LateUpdateAction = null;
 
+        private string m_Language = null;
+        private LuaTable m_LanguageTable = null;
+        private LuaCachedLocalizationText m_LocalizationText = new LuaCachedLocalizationText();
+
+        public event Action<string, string> OnLanguageChanged;
+
+        public string Language
+        {
+            get
+            {
+                return m_Language;
+            }
+        }
+
+        public void SetLanguage(string language,LuaTable languageTable)
+        {
+            if(m_Language!=language)
+            {
+                if(m_LanguageTable!=null)
+                {
+                    m_LanguageTable.Dispose();
+                    m_LanguageTable = null;
+                }
+            }
+
+            string preLanguage = m_Language;
+            m_Language = language;
+            m_LocalizationText.ChangeLanguage(languageTable);
+            OnLanguageChanged?.Invoke(preLanguage, m_Language);
+        }
+
+        public string GetLocalizationText(string locName)
+        {
+            return m_LocalizationText.GetText(locName);
+        }
+
         private LuaEnvManager()
         {
         }
@@ -98,7 +134,7 @@ namespace DotEngine.Lua
             m_EnvBehaviour = envGameObject.AddComponent<LuaEnvBehaviour>();
             UnityObject.DontDestroyOnLoad(envGameObject);
 
-            BridgeTable = RequireAndInstanceLocalTable(startupScriptPath);
+            BridgeTable = RequireAndGetLocalTable(startupScriptPath);
             if (BridgeTable != null)
             {
                 Action startAction = BridgeTable.Get<Action>(LuaDefine.START_FUNCTION_NAME);
@@ -271,6 +307,13 @@ namespace DotEngine.Lua
             {
                 Shuntdown();
             }
+
+            if(m_LanguageTable!=null)
+            {
+                m_LanguageTable.Dispose();
+            }
+            m_Language = null;
+            m_LanguageTable = null;
 
             Env?.FullGc();
             Env?.Dispose();

@@ -1,0 +1,24 @@
+require("DotLua/OOP/Class")
+
+local Logger = require("DotLua/Debug/Logger")
+
+local Lancher = {}
+Lancher.__index = Lancher;
+
+function Lancher.DoStart()
+    Logger.Info("Lancher::DoStart->Started");
+end
+
+function Lancher.DoUpdate(deltaTime,unscaleDeltaTime)
+    Logger.Info("Lancher::DoUpdate->Updated");
+end
+
+function Lancher.DoLateUpdate(deltaTime,unscaleDeltaTime)
+
+end
+
+function Lancher.DoDestroy()
+
+end
+
+return Lancher;
