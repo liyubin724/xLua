@@ -60,7 +60,7 @@ namespace DotEngine.Lua
         
         public LuaTable BridgeTable { get; private set; } = null;
 
-        private LuaEnvBehaviour m_EnvBehaviour = null;
+        private GameObject m_EnvGameObject = null;
         private Action<float, float> m_UpdateAction = null;
         private Action<float, float> m_LateUpdateAction = null;
 
@@ -117,9 +117,14 @@ namespace DotEngine.Lua
 
             IsRunning = true;
 
-            var envGameObject = new GameObject("Lua Env Behaviour");
-            m_EnvBehaviour = envGameObject.AddComponent<LuaEnvBehaviour>();
-            UnityObject.DontDestroyOnLoad(envGameObject);
+            m_EnvGameObject = new GameObject("Lua Env Behaviour");
+            UnityObject.DontDestroyOnLoad(m_EnvGameObject);
+
+            var updateBehaviour = m_EnvGameObject.AddComponent<UpdateBehaviour>();
+            updateBehaviour.UpdateEvent += DoUpdate;
+
+            var lateUpdateBehavoiur = m_EnvGameObject.AddComponent<LateUpdateBehaviour>();
+            lateUpdateBehavoiur.LateUpdateEvent += DoLateUpdate;
 
             BridgeTable = RequireAndGetLocalTable(startupScriptPath);
             if (BridgeTable != null)
@@ -132,7 +137,7 @@ namespace DotEngine.Lua
             }
         }
 
-        public void Update(float deltaTime,float unscaleDeltaTime)
+        private void DoUpdate(float deltaTime,float unscaleDeltaTime)
         {
             if (IsValid)
             {
@@ -142,7 +147,7 @@ namespace DotEngine.Lua
             }
         }
 
-        public void LateUpdate(float deltaTime,float unscaleDeltaTime)
+        private void DoLateUpdate(float deltaTime,float unscaleDeltaTime)
         {
             if(IsValid)
             {
@@ -161,8 +166,8 @@ namespace DotEngine.Lua
             m_UpdateAction = null;
             m_LateUpdateAction = null;
 
-            UnityObject.Destroy(m_EnvBehaviour.gameObject);
-            m_EnvBehaviour = null;
+            UnityObject.Destroy(m_EnvGameObject);
+            m_EnvGameObject = null;
 
             m_Localization?.Dispose();
             m_Localization = null;
