@@ -12,11 +12,9 @@
 
         public const string CONSTRUCTOR_FUNCTION_NAME = "new";
 
-        public const string STARTUP_SCRIPT_PATH = "Lancher";
-
         public const string SCRIPT_ASSET_DIR = "Scripts/LuaScripts";
         public const string SCRIPT_EXTENSION = ".txt";
 
-        public const string REQUIRE_SCRIPT_FORMAT = "require(\"{0}\")";
+        public const string REQUIRE_SCRIPT_FORMAT = "return require(\"{0}\")";
     }
 }

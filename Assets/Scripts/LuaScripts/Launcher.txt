@@ -1,0 +1,22 @@
+require("DotLua/init")
+
+local Logger = _G.Logger
+
+local Launcher = {}
+Launcher.__index = Launcher
+
+function Launcher.DoStart()
+    Logger.Info("Launcher", "Started")
+end
+
+function Launcher.DoUpdate(deltaTime, unscaleDeltaTime)
+    Logger.Info("Launcher", "Updated")
+end
+
+function Launcher.DoLateUpdate(deltaTime, unscaleDeltaTime)
+end
+
+function Launcher.DoDestroy()
+end
+
+return Launcher
