@@ -1,33 +1,19 @@
+local class = require("DotLua/OOP/Class")
+
 ----internal----
 --构造函数
 --@param receiver 接收事件的table，可为空
 --@param func 接收事件处理的处理函数
---@param userdata 自定义参数
-local EventData =
+--@param customData 自定义参数
+local EventHandler =
     class(
     function(self)
         self.id = nil
         self.receiver = nil
         self.func = nil
-        self.userdata = nil
+        self.customData = nil
     end
 )
-
-function EventData:IsValid()
-    return self.id and self.func
-end
-
-function EventData:GetID()
-    return self.id
-end
-
-function EventData:GetReceiver()
-    return self.receiver
-end
-
-function EventData:GetFunc()
-    return self.func
-end
 
 ----internal----
 --比较是否相同
@@ -35,7 +21,7 @@ end
 --1：两个对象是同一对象
 --2：两个对象中的接收者与处理函数相同
 -- @return bool
-EventData.__eq = function(data1,data2)
+EventHandler.__eq = function(data1, data2)
     if data1 == nil or data2 == nil then
         return false
     end
@@ -43,39 +29,55 @@ EventData.__eq = function(data1,data2)
     return data1.id == data2.id and data1.receiver == data2.receiver and data1.func == data2.func
 end
 
-function EventData:SetData(id,receiver, func, userdata)
+function EventHandler:GetID()
+    return self.id
+end
+
+function EventHandler:GetReceiver()
+    return self.receiver
+end
+
+function EventHandler:GetFunc()
+    return self.func
+end
+
+function EventHandler:IsValid()
+    return self.id and self.func
+end
+
+function EventHandler:DoGet(id, receiver, func, customData)
     self.id = id
     self.receiver = receiver
     self.func = func
-    self.userdata = userdata
+    self.customData = customData
 end
 
-function EventData:DoRelease()
+function EventHandler:DoRelease()
     self.id = nil
     self.receiver = nil
     self.func = nil
-    self.userdata = nil
+    self.customData = nil
 end
 
 ----internal----
 --通知事件执行，由EventDispatcher来调用
 -- @param ... 多参数
-function EventData:Invoke(...)
+function EventHandler:Invoke(...)
     if self.func then
         if self.receiver then
-            if self.userdata then
-                self.func(self.receiver, self.id, self.userdata, ...)
+            if self.customData then
+                self.func(self.receiver, self.id, self.customData, ...)
             else
                 self.func(self.receiver, self.id, ...)
             end
         else
-            if self.userdata then
-                self.func(self.id,self.userdata, ...)
+            if self.customData then
+                self.func(self.id, self.customData, ...)
             else
-                self.func(self.id,...)
+                self.func(self.id, ...)
             end
         end
     end
 end
 
-return EventData
+return EventHandler

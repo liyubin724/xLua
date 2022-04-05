@@ -12,6 +12,8 @@
 
         public const string CONSTRUCTOR_FUNCTION_NAME = "new";
 
+        public const string STARTUP_SCRIPT_PATH = "Lancher";
+
         public const string SCRIPT_ASSET_DIR = "Scripts/LuaScripts";
         public const string SCRIPT_EXTENSION = ".txt";
 

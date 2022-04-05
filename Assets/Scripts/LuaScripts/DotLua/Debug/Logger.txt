@@ -8,18 +8,18 @@ Logger.isWarningEnable = true
 Logger.isErrorEnable = true
 
 Logger.info = function(tag, message)
-    print(string.format('%s [INFO] %s : %s', os.date("%Y-%m-%d %H:%M:%S",os.time()), tag, message))
+    print(string.format("%s [INFO] %s : %s", os.date("%Y-%m-%d %H:%M:%S", os.time()), tag, message))
 end
 Logger.warning = function(tag, message)
-    print(string.format('%s [WARNING] %s : %s', os.date("%Y-%m-%d %H:%M:%S",os.time()), tag, message))
+    print(string.format("%s [WARNING] %s : %s", os.date("%Y-%m-%d %H:%M:%S", os.time()), tag, message))
 end
 Logger.error = function(tag, message)
-    print(string.format('%s [ERROR] %s : %s', os.date("%Y-%m-%d %H:%M:%S",os.time()), tag, message))
+    print(string.format("%s [ERROR] %s : %s", os.date("%Y-%m-%d %H:%M:%S", os.time()), tag, message))
 end
 
 local getMessage = function(message, ...)
     local mess = message
-    if select("#",...) > 0 then
+    if select("#", ...) > 0 then
         mess = sformat(mess, ...)
     end
 
@@ -56,4 +56,5 @@ function Logger.Error(tag, message, ...)
     end
 end
 
+_G.Logger = Logger
 return Logger

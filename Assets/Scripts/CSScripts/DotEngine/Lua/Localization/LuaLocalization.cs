@@ -3,21 +3,13 @@ using XLua;
 
 namespace DotEngine.Lua
 {
-    class LuaCachedLocalizationText
+    class LuaLocalization
     {
         private Dictionary<string, string> cachedTextDic = new Dictionary<string, string>();
         private LuaTable languageTable = null;
 
-        public LuaCachedLocalizationText() { }
-
-        public void ChangeLanguage(LuaTable language)
+        public LuaLocalization()
         {
-            if(languageTable!=null && languageTable!=language)
-            {
-                languageTable.Dispose();
-            }
-            languageTable = language;
-            cachedTextDic.Clear();
         }
 
         public string GetText(string locName)
@@ -36,6 +28,28 @@ namespace DotEngine.Lua
                 }
             }
             return text;
+        }
+
+        public void ChangeLanguage(LuaTable language)
+        {
+            cachedTextDic.Clear();
+            if(languageTable!=language)
+            {
+                if(languageTable!=null)
+                {
+                    languageTable.Dispose();
+                    languageTable = null;
+                }
+            }
+            languageTable = language;
+        }
+
+        public void Dispose()
+        {
+            if(languageTable!=null)
+            {
+                languageTable.Dispose();
+            }
         }
     }
 }

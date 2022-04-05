@@ -65,11 +65,6 @@ namespace DotEngine.Lua
         private Action<float, float> m_LateUpdateAction = null;
 
         private string m_Language = null;
-        private LuaTable m_LanguageTable = null;
-        private LuaCachedLocalizationText m_LocalizationText = new LuaCachedLocalizationText();
-
-        public event Action<string, string> OnLanguageChanged;
-
         public string Language
         {
             get
@@ -77,27 +72,19 @@ namespace DotEngine.Lua
                 return m_Language;
             }
         }
+        private LuaLocalization m_Localization = new LuaLocalization();
 
-        public void SetLanguage(string language,LuaTable languageTable)
+        public event Action OnLanguageChanged;
+        public void SetLocalizationText(string language,LuaTable languageTable)
         {
-            if(m_Language!=language)
-            {
-                if(m_LanguageTable!=null)
-                {
-                    m_LanguageTable.Dispose();
-                    m_LanguageTable = null;
-                }
-            }
-
-            string preLanguage = m_Language;
             m_Language = language;
-            m_LocalizationText.ChangeLanguage(languageTable);
-            OnLanguageChanged?.Invoke(preLanguage, m_Language);
+            m_Localization.ChangeLanguage(languageTable);
+            OnLanguageChanged?.Invoke();
         }
 
         public string GetLocalizationText(string locName)
         {
-            return m_LocalizationText.GetText(locName);
+            return m_Localization?.GetText(locName);
         }
 
         private LuaEnvManager()
@@ -177,7 +164,10 @@ namespace DotEngine.Lua
             UnityObject.Destroy(m_EnvBehaviour.gameObject);
             m_EnvBehaviour = null;
 
-            if(BridgeTable!=null)
+            m_Localization?.Dispose();
+            m_Localization = null;
+
+            if (BridgeTable!=null)
             {
                 LuaFunction destroyLuaFunc = BridgeTable.Get<LuaFunction>(LuaDefine.DESTROY_FUNCTION_NAME);
                 destroyLuaFunc?.Call();
@@ -307,13 +297,6 @@ namespace DotEngine.Lua
             {
                 Shuntdown();
             }
-
-            if(m_LanguageTable!=null)
-            {
-                m_LanguageTable.Dispose();
-            }
-            m_Language = null;
-            m_LanguageTable = null;
 
             Env?.FullGc();
             Env?.Dispose();

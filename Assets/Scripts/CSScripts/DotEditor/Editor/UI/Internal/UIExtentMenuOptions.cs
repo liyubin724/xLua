@@ -56,12 +56,12 @@ namespace DotEditor.UI
             PlaceUIElementRoot(go, menuCommand);
         }
 
-        [MenuItem("GameObject/Dot Engine/UI/Bitmap Text", false, 4)]
-        static public void AddBitmapText(MenuCommand menuCommand)
-        {
-            GameObject go = UIExtensionDefaultControls.CreateBitmapText(GetStandardResources());
-            PlaceUIElementRoot(go, menuCommand);
-        }
+        //[MenuItem("GameObject/Dot Engine/UI/Bitmap Text", false, 4)]
+        //static public void AddBitmapText(MenuCommand menuCommand)
+        //{
+        //    GameObject go = UIExtensionDefaultControls.CreateBitmapText(GetStandardResources());
+        //    PlaceUIElementRoot(go, menuCommand);
+        //}
 
         [MenuItem("GameObject/Dot Engine/Lua UI/Button-Image", false, 100)]
         static public void AddLuaButtonWithImage(MenuCommand menuCommand)

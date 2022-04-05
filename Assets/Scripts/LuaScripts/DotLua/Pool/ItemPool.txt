@@ -1,0 +1,41 @@
+local class = require("DotLua/OOP/Class")
+
+local ItemPool =
+    class(
+    function(self, itemClass)
+        self.itemClass = itemClass
+        self.items = {}
+    end
+)
+
+function ItemPool:Get(...)
+    local item
+    if #(self.items) > 0 then
+        item = self.items[1]
+        table.remove(self.items, 1)
+    else
+        item = self.itemClass()
+    end
+
+    if item.DoGet and type(item.DoGet) == "function" then
+        item.DoGet(item, ...)
+    end
+
+    return item
+end
+
+function ItemPool:Release(item)
+    if item then
+        if item.DoRelease and type(item.DoRelease) == "function" then
+            item.DoRelease(item)
+        end
+
+        table.insert(self.items, item)
+    end
+end
+
+function ItemPool:Clear()
+    self.items = {}
+end
+
+return ItemPool

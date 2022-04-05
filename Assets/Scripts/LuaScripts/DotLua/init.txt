@@ -1,0 +1,12 @@
+require("DotLua/Utility/table")
+require("DotLua/Utility/math")
+
+require("DotLua/OOP/Class")
+require("DotLua/Debug/Logger")
+require("DotLua/OOP/Callback")
+require("DotLua/OOP/Delegate")
+
+require("DotLua/OOP/OOP")
+
+local EventDispatcher = require("DotLua/Event/EventDispatcher")
+_G.EventManager = EventDispatcher()

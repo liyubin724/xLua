@@ -1,4 +1,5 @@
 local serpent = require('DotLua/Tool/serpent')
+local table = _G.table;
 
 ----public----
 --将table转换为字符串

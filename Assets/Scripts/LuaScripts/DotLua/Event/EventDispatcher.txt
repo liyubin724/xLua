@@ -1,19 +1,18 @@
-require('DotLua/Utility/table')
+local class = require("DotLua/OOP/Class")
+local Logger = require("DotLua/Debug/Logger")
+local EventHandler = require("DotLua/Event/EventHandler")
+local ItemPool = require("DotLua/Pool/ItemPool")
 
-local EventData = require('DotLua/Event/EventData')
-local ObjectPool = require('DotLua/Pool/ObjectPool')
-
-local Logger = Logger
 ----public----
 --消息机制
 -- 对于全局的消息可以使用Game.EventMgr访问到
 local EventDispatcher =
     class(
     function(self)
-        self.eventPool = ObjectPool(EventData)
-        self.events = {}
+        self.handlerPool = ItemPool(EventHandler)
+        self.handlerDic = {}
 
-        self.tempEvents = {}
+        self.tempHandlers = {}
     end
 )
 
@@ -23,23 +22,22 @@ local EventDispatcher =
 -- @param receiver 消息接收者，可以为nil
 -- @param func 消息处理函数，不可以为nil
 -- @param isOnce 标识消息是否只处理一次，如果为true,触发一次后将会被删除
--- @param userData 消息可以携带自定义参数
-function EventDispatcher:RegisterListener(eventID, receiver, func, userdata)
+-- @param customData 消息可以携带自定义参数
+function EventDispatcher:Register(eventID, receiver, func, customData)
     if not func then
-        Logger.Error('Event', 'LuaEventDispatcher::RegisterListener->func is empty')
+        Logger.Error("Event", "LuaEventDispatcher::RegisterListener->func is empty")
         return
     end
 
-    local eventData = self.eventPool:Get()
-    eventData:SetData(eventID,receiver, func, userdata)
+    local handler = self.handlerPool:Get(eventID, receiver, func, customData)
 
-    local eventList = self.events[eventID]
-    if not eventList then
-        eventList = {}
-        self.events[eventID] = eventList
+    local handlers = self.handlerDic[eventID]
+    if not handlers then
+        handlers = {}
+        self.events[eventID] = handlers
     end
 
-    table.insert(eventList, eventData)
+    table.insert(handlers, handler)
 end
 
 ----public----
@@ -47,20 +45,19 @@ end
 -- @param eventID 消息ID号
 -- @param receiver 消息接收者
 -- @param func 消息处理函数
-function EventDispatcher:UnregisterListener(eventID, receiver, func)
-    if not func then
-        Logger.Error('Event', 'LuaEventDispatcher::UnregisterListener->func is empty')
+function EventDispatcher:Unregister(eventID, receiver, func)
+    if not func or not eventID then
+        Logger.Error("Event", "LuaEventDispatcher::UnregisterListener->func is empty")
         return
     end
 
-    local eventList = self.events[eventID]
-    if eventList then
-        for i = #(eventList), 1, -1 do
-            local eventData = eventList[i]
-            if eventData:GetReceiver() == receiver and eventData:GetFunc() == func then
-                table.remove(eventList, i)
-
-                self.eventPool:Release(eventData)
+    local handlers = self.handlerDic[eventID]
+    if handlers then
+        for i = #(handlers), 1, -1 do
+            local handler = handlers[i]
+            if handler:GetReceiver() == receiver and handler:GetFunc() == func then
+                table.remove(handlers, i)
+                self.handlerPool:Release(handler)
                 break
             end
         end
@@ -71,13 +68,13 @@ end
 -- 取消对应消息ID的所有侦听
 -- @param eventID 消息ID号
 function EventDispatcher:UnregisterAll(eventID)
-    local eventList = self.events[eventID]
-    if eventList then
-        for i = #(eventList), 1, -1 do
-            local eventData = eventList[i]
+    local handlers = self.handlerDic[eventID]
+    if handlers then
+        for i = #(handlers), 1, -1 do
+            local handler = handlers[i]
 
-            table.remove(eventList, i)
-            self.eventPool:Release(eventData)
+            table.remove(handlers, i)
+            self.eventPool:Release(handler)
         end
     end
 end
@@ -87,25 +84,25 @@ end
 --@param eventID 消息ID号
 --@param ... 接收到的参数
 function EventDispatcher:Trigger(eventID, ...)
-    local eventList = self.events[eventID]
-    if eventList then
-        table.copyto(eventList, self.tempEvents)
+    local handlers = self.handlerDic[eventID]
+    if handlers then
+        table.copyto(handlers, self.tempHandlers)
 
-        for i = #(self.tempEvents), 1, -1 do
-            local eventData = self.tempEvents[i]
-            if eventData and eventData:IsValid() and eventData:GetID() == eventID then
-                eventData:Invoke(...)
+        for _, handler in ipairs(self.tempHandlers) do
+            if handler and handler:IsValid() then
+                handler:Invoke(...)
             end
-            table.remove(self.tempEvents, i)
         end
+
+        table.clear(self.tempHandlers)
     end
 end
 
 ----public----
 -- 取消所有的侦听
 function EventDispatcher:Clear()
-    self.events = {}
-    self.eventPool:Clear()
+    self.handlerDic = {}
+    self.handlerPool:Clear()
 end
 
 return EventDispatcher

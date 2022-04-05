@@ -1,0 +1,25 @@
+local LocalizationText = {}
+
+LocalizationText.language = nil;
+LocalizationText.languagePath = nil;
+LocalizationText.text = nil;
+
+function LocalizationText.Init(path,language)
+    LocalizationText.languagePath = path;
+    LocalizationText.SetLanguage(language);
+end
+
+function LocalizationText.GetLanguage()
+    return LocalizationText.language;
+end
+
+function LocalizationText.SetLanguage(language)
+    LocalizationText.language = language;
+    LocalizationText.text = require(string.format(LocalizationText.languagePath, language));
+end
+
+function LocalizationText.GetText(locName)
+    return LocalizationText.text[locName];
+end
+
+return LocalizationText;

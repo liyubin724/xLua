@@ -1,4 +1,6 @@
-Callback =
+local class = require("DotLua/OOP/Class")
+
+local Callback =
     class(
     function(self, receiver, func)
         self.receiver = receiver
@@ -43,3 +45,6 @@ function Callback:Equal(otherCallback)
         return self.receiver == otherCallback.receiver and self.func == otherCallback.func
     end
 end
+
+_G.Callback = Callback
+return Callback

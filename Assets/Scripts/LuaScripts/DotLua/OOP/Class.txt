@@ -1,10 +1,10 @@
-function class(base, init)
+local class = function(base, init)
     local c = {} -- a new class instance
 
-    if not init and type(base) == 'function' then
+    if not init and type(base) == "function" then
         init = base
         base = nil
-    elseif type(base) == 'table' then
+    elseif type(base) == "table" then
         -- our new class is a shallow copy of the base class!
         for i, v in pairs(base) do
             c[i] = v
@@ -24,6 +24,9 @@ function class(base, init)
         end
     end
 
+    c.is_class = true
+    c.is_instance = false
+
     c.is_a = function(self, klass)
         local m = getmetatable(self)
         while m do
@@ -36,7 +39,7 @@ function class(base, init)
     end
 
     c.new = function(...)
-        return c(...);
+        return c(...)
     end
 
     -- expose a constructor which can be called by <classname>(<args>)
@@ -46,8 +49,9 @@ function class(base, init)
         local obj = {}
 
         setmetatable(obj, class_tbl)
-
         class_tbl._init(obj, ...)
+        c.is_class = false
+        c.is_instance = true
 
         return obj
     end
@@ -57,4 +61,5 @@ function class(base, init)
     return c
 end
 
-return class;
+_G.class = class
+return class

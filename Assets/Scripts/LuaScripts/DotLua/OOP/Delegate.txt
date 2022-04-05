@@ -1,5 +1,5 @@
-require("DotLua/OOP/Callback")
-
+local Callback = require("DotLua/OOP/Callback")
+local class = require("DotLua/OOP/Class")
 local Logger = require("DotLua/Debug/Logger")
 
 ----public----
@@ -13,7 +13,7 @@ local Logger = require("DotLua/Debug/Logger")
 
     delegate:Invoke(value1,value2....valuen)
 --]]
-Delegate =
+local Delegate =
     class(
     function(self)
         self.callbacks = {}
@@ -30,7 +30,6 @@ end
 Delegate.__add = function(self, data)
     if data then
         if type(data) == "table" then
-
             local dataLen = #(data)
 
             local receiver = nil
@@ -44,7 +43,7 @@ Delegate.__add = function(self, data)
             end
 
             if func and type(func) == "function" then
-                local callback = Callback(receiver,func)
+                local callback = Callback(receiver, func)
                 table.insert(self.callbacks, callback)
             else
                 Logger.Error("Delegate", "data is nil")
@@ -62,10 +61,9 @@ end
 ----private----
 -- 删除侦听
 -- @param data 格式{self,XXXClass.XXXFunction}/{XXXClass.XXXFunction}
-Delegate.__sub = function(self,data)
+Delegate.__sub = function(self, data)
     if data then
         if type(data) == "table" then
-
             local dataLen = #(data)
 
             local receiver = nil
@@ -79,7 +77,7 @@ Delegate.__sub = function(self,data)
             end
 
             if func and type(func) == "function" then
-                for i = #(self.callbacks),1,-1 do
+                for i = #(self.callbacks), 1, -1 do
                     local callback = self.callbacks[i]
                     if callback:GetReceiver() == receiver and callback:GetFunc() == func then
                         table.remove(self.callbacks, i)
@@ -101,8 +99,8 @@ end
 ----public----
 -- 调用执行
 function Delegate:Invoke(...)
-    for _, value in ipairs(self.callbacks) do
-        value:Invoke(...)
+    for _, callback in ipairs(self.callbacks) do
+        callback:Invoke(...)
     end
 end
 
@@ -110,6 +108,9 @@ function Delegate:Clear()
     self.callbacks = {}
 end
 
-function Delegate.CreateListener(receiver,func)
-    return {receiver,func}
+function Delegate.Create(receiver, func)
+    return {receiver, func}
 end
+
+_G.Delegate = Delegate
+return Delegate
