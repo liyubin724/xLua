@@ -2,6 +2,7 @@
 using DotEngine.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -27,155 +28,45 @@ namespace DotEditor.Lua
             }
         }
 
-        public static List<Type> GetInnerCSharpCallLuaTypeList
-        {
-            get
-            {
-                List<Type> callTypes = new List<Type>();
-
-                callTypes.Add(typeof(Action));
-                callTypes.Add(typeof(Action<float, float>));
-                callTypes.Add(typeof(Func<string, LuaTable>));
-
-                return callTypes;
-            }
-        }
-
         [LuaCallCSharp]
-        public static List<Type> GetLuaCallCSharpTypeList
+        public static List<Type> GetLuaCallCSharpTypes
         {
             get
             {
-                List<Type> callTypes = new List<Type>();
-                GenConfig genConfig = GenConfig.GetConfig(false);
-                if (genConfig != null)
-                {
-                    foreach(var typeFullName in genConfig.LuaCallCSharpTypes)
-                    {
-                        Type t = AssemblyUtility.GetTypeByFullName(typeFullName);
-                        if (t != null)
-                        {
-                            callTypes.Add(t);
-                        }
-                        else
-                        {
-                            Debug.LogError("Type Not Found.name = "+typeFullName);
-                        }
-                    }
+                List<Type> types = new List<Type>();
 
-                    foreach(var generic in genConfig.LuaCallCSharpGenericTypes)
-                    {
-                        Type t = GetGenericType(generic);
-                        if(t!=null)
-                        {
-                            callTypes.Add(t);
-                        }else
-                        {
-                            Debug.LogError("Type Not Found");
-                        }
-                    }
-
-                }
-                return callTypes;
+                types = types.Distinct().ToList();
+                return types;
             }
-        }
-
-        private static Type GetGenericType(string genericTypeName)
-        {
-            if(string.IsNullOrEmpty(genericTypeName))
-            {
-                return null;
-            }
-            string[] types = genericTypeName.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
-            if (types == null || types.Length < 2)
-            {
-                return null;
-            }
-            string genericType = types[0];
-            string[] paramTypes = new string[types.Length - 1];
-            Array.Copy(types, 1, paramTypes, 0, paramTypes.Length);
-
-            return AssemblyUtility.GetGenericType(genericType, paramTypes);
         }
 
         [CSharpCallLua]
-        public static List<Type> GetCSharpCallLuaTypeList
+        public static List<Type> GetCSharpCallLuaTypes
         {
             get
             {
-                List<Type> callTypes = new List<Type>(GetInnerCSharpCallLuaTypeList);
-                GenConfig genConfig = GenConfig.GetConfig(false);
-                if (genConfig != null)
-                {
-                    foreach (var typeFullName in genConfig.CSharpCallLuaTypes)
-                    {
-                        Type t = AssemblyUtility.GetTypeByFullName(typeFullName);
-                        if (t != null)
-                        {
-                            callTypes.Add(t);
-                        }
-                        else
-                        {
-                            Debug.LogError("Type Not Found.type = "+typeFullName);
-                        }
-                    }
+                List<Type> types = new List<Type>();
 
-                    foreach (var generic in genConfig.CSharpCallLuaGenericTypes)
-                    {
-                        Type t = GetGenericType(generic);
-                        if (t != null)
-                        {
-                            callTypes.Add(t);
-                        }
-                        else
-                        {
-                            Debug.LogError("Type Not Found.type = "+generic);
-                        }
-                    }
-                }
-                return callTypes;
+                types.Add(typeof(Action));
+                types.Add(typeof(Action<float, float>));
+                types.Add(typeof(Func<string, LuaTable>));
+
+                types = types.Distinct().ToList();
+                return types;
             }
         }
 
         [GCOptimize]
-        public static List<Type> GetGCOptimizeTypeList
+        public static List<Type> GetGCOptimizeTypes
         {
             get
             {
-                List<Type> callTypes = new List<Type>();
-                GenConfig genConfig = GenConfig.GetConfig(false);
-                if (genConfig != null)
-                {
-                    foreach (var typeFullName in genConfig.GCOptimizeTypes)
-                    {
-                        callTypes.Add(AssemblyUtility.GetTypeByFullName(typeFullName));
-                    }
-                }
+                List<Type> types = new List<Type>();
+                types.Add(typeof(Vector2Int));
+                types.Add(typeof(Vector3Int));
 
-
-                return callTypes;
-            }
-        }
-
-        [BlackList]
-
-        public static List<List<string>> GetBlackList
-        {
-            get
-            {
-                List<List<string>> result = new List<List<string>>();
-                GenConfig genConfig = GenConfig.GetConfig(false);
-                if(genConfig != null)
-                {
-                    foreach (var blackStr in genConfig.blackDatas)
-                    {
-                        List<string> list = new List<string>();
-                        list.AddRange(blackStr.Split(new char[] { '@', '$' }, StringSplitOptions.RemoveEmptyEntries));
-                        result.Add(list);
-                    }
-                }
-
-                return result;
+                types = types.Distinct().ToList();
+                return types;
             }
         }
 
@@ -239,5 +130,159 @@ namespace DotEditor.Lua
             return false;
         };
 #endif
+
+        //-----------------------------------Tool Extension-----------------
+
+        public static List<Type> GetInnerCSharpCallLuaTypeList
+        {
+            get
+            {
+                List<Type> callTypes = new List<Type>();
+
+                callTypes.Add(typeof(Action));
+                callTypes.Add(typeof(Action<float, float>));
+                callTypes.Add(typeof(Func<string, LuaTable>));
+
+                return callTypes;
+            }
+        }
+
+        //[LuaCallCSharp]
+        public static List<Type> GetLuaCallCSharpTypeList
+        {
+            get
+            {
+                List<Type> callTypes = new List<Type>();
+                GenConfig genConfig = GenConfig.GetConfig(false);
+                if (genConfig != null)
+                {
+                    foreach(var typeFullName in genConfig.LuaCallCSharpTypes)
+                    {
+                        Type t = AssemblyUtility.GetTypeByFullName(typeFullName);
+                        if (t != null)
+                        {
+                            callTypes.Add(t);
+                        }
+                        else
+                        {
+                            Debug.LogError("Type Not Found.name = "+typeFullName);
+                        }
+                    }
+
+                    foreach(var generic in genConfig.LuaCallCSharpGenericTypes)
+                    {
+                        Type t = GetGenericType(generic);
+                        if(t!=null)
+                        {
+                            callTypes.Add(t);
+                        }else
+                        {
+                            Debug.LogError("Type Not Found");
+                        }
+                    }
+
+                }
+                return callTypes;
+            }
+        }
+
+        private static Type GetGenericType(string genericTypeName)
+        {
+            if(string.IsNullOrEmpty(genericTypeName))
+            {
+                return null;
+            }
+            string[] types = genericTypeName.Split(new char[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
+            if (types == null || types.Length < 2)
+            {
+                return null;
+            }
+            string genericType = types[0];
+            string[] paramTypes = new string[types.Length - 1];
+            Array.Copy(types, 1, paramTypes, 0, paramTypes.Length);
+
+            return AssemblyUtility.GetGenericType(genericType, paramTypes);
+        }
+
+        //[CSharpCallLua]
+        public static List<Type> GetCSharpCallLuaTypeList
+        {
+            get
+            {
+                List<Type> callTypes = new List<Type>(GetInnerCSharpCallLuaTypeList);
+                GenConfig genConfig = GenConfig.GetConfig(false);
+                if (genConfig != null)
+                {
+                    foreach (var typeFullName in genConfig.CSharpCallLuaTypes)
+                    {
+                        Type t = AssemblyUtility.GetTypeByFullName(typeFullName);
+                        if (t != null)
+                        {
+                            callTypes.Add(t);
+                        }
+                        else
+                        {
+                            Debug.LogError("Type Not Found.type = "+typeFullName);
+                        }
+                    }
+
+                    foreach (var generic in genConfig.CSharpCallLuaGenericTypes)
+                    {
+                        Type t = GetGenericType(generic);
+                        if (t != null)
+                        {
+                            callTypes.Add(t);
+                        }
+                        else
+                        {
+                            Debug.LogError("Type Not Found.type = "+generic);
+                        }
+                    }
+                }
+                return callTypes;
+            }
+        }
+
+        //[GCOptimize]
+        public static List<Type> GetGCOptimizeTypeList
+        {
+            get
+            {
+                List<Type> callTypes = new List<Type>();
+                GenConfig genConfig = GenConfig.GetConfig(false);
+                if (genConfig != null)
+                {
+                    foreach (var typeFullName in genConfig.GCOptimizeTypes)
+                    {
+                        callTypes.Add(AssemblyUtility.GetTypeByFullName(typeFullName));
+                    }
+                }
+
+
+                return callTypes;
+            }
+        }
+
+        //[BlackList]
+        public static List<List<string>> GetBlackList
+        {
+            get
+            {
+                List<List<string>> result = new List<List<string>>();
+                GenConfig genConfig = GenConfig.GetConfig(false);
+                if(genConfig != null)
+                {
+                    foreach (var blackStr in genConfig.blackDatas)
+                    {
+                        List<string> list = new List<string>();
+                        list.AddRange(blackStr.Split(new char[] { '@', '$' }, StringSplitOptions.RemoveEmptyEntries));
+                        result.Add(list);
+                    }
+                }
+
+                return result;
+            }
+        }
+
     }
 }
