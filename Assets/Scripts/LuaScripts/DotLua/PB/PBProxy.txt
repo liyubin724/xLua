@@ -1,0 +1,20 @@
+local pb = require("pb")
+local assert = assert
+local ScriptRootDir = _G.ScriptRootDir
+
+local PBProxy = {}
+
+function PBProxy.Register(pbPath)
+    local path = string.format("%s/%s.pb", ScriptRootDir, pbPath)
+    assert(pb.loadfile(path))
+end
+
+function PBProxy.Encode(name, data)
+    return assert(pb.encode(name, data))
+end
+
+function PBProxy.Decode(name, bytes)
+    return assert(pb.decode(name, bytes))
+end
+
+return PBProxy

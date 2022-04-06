@@ -1,0 +1,4 @@
+local PBProxy = require("DotLua/PB/PBProxy")
+
+PBProxy.Register("Game/Protocol/PB/Login")
+PBProxy.Register("Game/Protocol/PB/Shop")

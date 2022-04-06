@@ -1,4 +1,6 @@
 require("DotLua/init")
+require("Game/Protocol/PBRegister")
+local PBProxy = require("DotLua/PB/PBProxy")
 
 local Logger = _G.Logger
 
@@ -7,10 +9,18 @@ Launcher.__index = Launcher
 
 function Launcher.DoStart()
     Logger.Info("Launcher", "Started")
+
+    local shopListRequest = {
+        shop_type = 11,
+        page_number = 23
+    }
+    local bytes = PBProxy.Encode("game.net.protos.ShopListRequest", shopListRequest)
+
+    local data = PBProxy.Decode("game.net.protos.ShopListRequest", bytes)
+    print(string.format("%d", data.shop_type))
 end
 
 function Launcher.DoUpdate(deltaTime, unscaleDeltaTime)
-    Logger.Info("Launcher", "Updated")
 end
 
 function Launcher.DoLateUpdate(deltaTime, unscaleDeltaTime)

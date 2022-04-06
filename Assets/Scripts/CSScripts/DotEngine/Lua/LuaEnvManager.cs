@@ -102,9 +102,14 @@ namespace DotEngine.Lua
 #else
             Global.Set("isDebug", false);
 #endif
-
-            string luaDir = $"{Application.dataPath}/{LuaDefine.SCRIPT_ASSET_DIR}";
-            ALuaScriptLoader scriptLoader = new FileScriptLoader(luaDir);
+            string scriptRootDir = string.Empty;
+#if UNITY_EDITOR
+            scriptRootDir = $"{Application.dataPath}/{LuaDefine.SCRIPT_ASSET_DIR}";
+#else
+            scriptRootDir = $"{Application.persistentDataPath}/{LuaDefine.SCRIPT_ASSET_DIR}";
+#endif
+            Global.Set("ScriptRootDir", scriptRootDir);
+            ALuaScriptLoader scriptLoader = new FileScriptLoader(scriptRootDir);
             Env.AddLoader(scriptLoader.LoadScript);
         }
 
