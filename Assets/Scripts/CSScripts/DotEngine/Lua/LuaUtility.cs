@@ -8,12 +8,12 @@
             {
                 return null;
             }
-            return scriptAssetPath.Replace("\\", "/").Replace(LuaDefine.SCRIPT_ASSET_DIR, "").Replace(LuaDefine.SCRIPT_EXTENSION, "");
+            return scriptAssetPath.Replace("\\", "/").Replace("Assets/"+LuaDefine.SCRIPT_ASSET_DIR+"/", "").Replace(LuaDefine.SCRIPT_EXTENSION, "");
         }
 
         public static string GetScriptAssetPath(string scriptPath)
         {
-            return $"Assets/{LuaDefine.SCRIPT_ASSET_DIR}{scriptPath}{LuaDefine.SCRIPT_EXTENSION}";
+            return $"Assets/{LuaDefine.SCRIPT_ASSET_DIR}/{scriptPath}{LuaDefine.SCRIPT_EXTENSION}";
         }
     }
 }

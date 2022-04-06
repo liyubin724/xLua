@@ -16,6 +16,7 @@ namespace DotEditor.Lua
     {
         [SerializeField]
         private List<GenAssemblyInfo> m_SelectedAssemblyInfos = new List<GenAssemblyInfo>();
+        [NonSerialized]
         public Dictionary<string, GenAssemblyInfo> SelectedAssemblyInfoDic = new Dictionary<string, GenAssemblyInfo>();
 
         public List<string> LuaCallCSharpTypes = new List<string>();
