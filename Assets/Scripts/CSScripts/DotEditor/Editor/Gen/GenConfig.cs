@@ -5,14 +5,18 @@ using System;
 
 namespace DotEditor.Lua
 {
+    [Serializable]
+    public class GenAssemblyInfo
+    {
+        public string AssemblyName;
+        public List<string> NameSpaceNames = new List<string>();
+    }
+
     public class GenConfig : ScriptableObject,ISerializationCallbackReceiver
     {
-        public Dictionary<string, List<string>> SelectedAssemblyDic = new Dictionary<string, List<string>>();
-
         [SerializeField]
-        private List<string> m_SelectedAssemblyNames = new List<string>();
-        [SerializeField]
-        private List<List<string>> m_SelectedNSNames = new List<List<string>>();
+        private List<GenAssemblyInfo> m_SelectedAssemblyInfos = new List<GenAssemblyInfo>();
+        public Dictionary<string, GenAssemblyInfo> SelectedAssemblyInfoDic = new Dictionary<string, GenAssemblyInfo>();
 
         public List<string> AssemblyNames = new List<string>();
         
@@ -40,25 +44,16 @@ namespace DotEditor.Lua
 
         public void OnBeforeSerialize()
         {
-            m_SelectedAssemblyNames.Clear();
-            m_SelectedNSNames.Clear();
-            foreach(var kvp in SelectedAssemblyDic)
-            {
-                m_SelectedAssemblyNames.Add(kvp.Key);
-                List<string> nsList = new List<string>();
-                m_SelectedNSNames.Add(nsList);
-                foreach(var ns in kvp.Value)
-                {
-                    nsList.Add(ns);
-                }
-            }
+            m_SelectedAssemblyInfos.Clear();
+            m_SelectedAssemblyInfos.AddRange(SelectedAssemblyInfoDic.Values);
         }
 
         public void OnAfterDeserialize()
         {
-            for(int i =0;i<m_SelectedAssemblyNames.Count;i++)
+            SelectedAssemblyInfoDic.Clear();
+            foreach(var info in m_SelectedAssemblyInfos)
             {
-                SelectedAssemblyDic.Add(m_SelectedAssemblyNames[i], m_SelectedNSNames[i]);
+                SelectedAssemblyInfoDic.Add(info.AssemblyName, info);
             }
         }
     }

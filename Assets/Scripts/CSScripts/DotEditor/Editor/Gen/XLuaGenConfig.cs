@@ -3,6 +3,7 @@ using DotEngine.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 using XLua;
 
@@ -10,6 +11,13 @@ namespace DotEditor.Lua
 {
     public static class XLuaGenConfig
     {
+        [MenuItem("Game/XLua/3 Generate", priority = 3)]
+        public static void GenerateCode()
+        {
+            Generator.ClearAll();
+            Generator.GenAll();
+        }
+
         [GenPath]
         public static string GetGenPath
         {

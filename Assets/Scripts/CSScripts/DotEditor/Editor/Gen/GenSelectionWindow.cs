@@ -10,7 +10,7 @@ namespace DotEditor.Lua
 {
     public class GenSelectionWindow : EditorWindow
     {
-        [MenuItem("Game/XLua/2 Gen Selection",priority =2)]
+        [MenuItem("Game/XLua/2 Gen Selection", priority = 2)]
         public static void ShowWin()
         {
             var win = GetWindow<GenSelectionWindow>();
@@ -27,8 +27,8 @@ namespace DotEditor.Lua
         private int toolbarSelectedIndex = 0;
         private GUIContent[] toolbarContents = new GUIContent[]
         {
-            new GUIContent("LuaCallCSharp"),
-            new GUIContent("CSharpCallLua"),
+            new GUIContent("Lua Call CSharp"),
+            new GUIContent("CSharp Call Lua"),
             new GUIContent("GCOptimize"),
             new GUIContent("BlackList"),
         };
@@ -58,13 +58,12 @@ namespace DotEditor.Lua
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
-                if(!genConfig.SelectedAssemblyDic.ContainsKey(assembly.FullName))
+                if (!genConfig.SelectedAssemblyInfoDic.TryGetValue(assembly.FullName, out var assemblyInfo))
                 {
                     continue;
                 }
-                List<string> selectedNSList = genConfig.SelectedAssemblyDic[assembly.FullName];
                 List<Type> filterTypes = (from type in assembly.GetTypes()
-                                          where string.IsNullOrEmpty(type.Namespace) || selectedNSList.IndexOf(type.Namespace) >= 0
+                                          where string.IsNullOrEmpty(type.Namespace) || assemblyInfo.NameSpaceNames.IndexOf(type.Namespace) >= 0
                                           select type).ToList();
 
                 foreach (var type in filterTypes)
@@ -110,7 +109,7 @@ namespace DotEditor.Lua
 
         private void OnGUI()
         {
-            if(searchField == null)
+            if (searchField == null)
             {
                 searchField = new SearchField();
                 searchField.autoSetFocusOnFindCommand = true;
@@ -123,13 +122,13 @@ namespace DotEditor.Lua
             tabRect.y += tabRect.height;
             tabRect.height = TOOLBAR_BTN_HEIGHT;
 
-            toolbarSelectedIndex = GUI.Toolbar(tabRect,toolbarSelectedIndex, toolbarContents);
+            toolbarSelectedIndex = GUI.Toolbar(tabRect, toolbarSelectedIndex, toolbarContents);
 
             Rect contentRect = new Rect(tabRect.x + 1, tabRect.y + tabRect.height + 1, position.width - 2, position.height - tabRect.y - tabRect.height - 2);
             EGUI.DrawAreaLine(contentRect, Color.black);
             tabViewers[toolbarSelectedIndex].OnGUI(contentRect);
 
-            if(GUI.changed)
+            if (GUI.changed)
             {
                 EditorUtility.SetDirty(genConfig);
             }
@@ -139,8 +138,14 @@ namespace DotEditor.Lua
         {
             EditorGUI.LabelField(rect, GUIContent.none, EditorStyles.toolbar);
 
+            Rect genRect = new Rect(rect.x, rect.y, 80, rect.height);
+            if (GUI.Button(genRect, "Generate", EditorStyles.toolbarButton))
+            {
+                XLuaGenConfig.GenerateCode();
+            }
+
             Rect settingRect = new Rect(rect.x + rect.width - 60, rect.y, 60, rect.height);
-            if(GUI.Button(settingRect,"Setting",EditorStyles.toolbarButton))
+            if (GUI.Button(settingRect, "Setting", EditorStyles.toolbarButton))
             {
                 var win = GenAssemblyWindow.ShowWin();
                 win.ClosedCallback = () =>
@@ -154,7 +159,7 @@ namespace DotEditor.Lua
             searchRect.x -= 160;
             searchRect.width = 160;
             string tempSearchText = searchField.OnToolbarGUI(searchRect, searchText);
-            if(tempSearchText!=searchText)
+            if (tempSearchText != searchText)
             {
                 searchText = tempSearchText;
                 tabViewers[toolbarSelectedIndex].OnSearch(searchText);
@@ -167,7 +172,7 @@ namespace DotEditor.Lua
             EditorUtility.SetDirty(genConfig);
             AssetDatabase.SaveAssets();
         }
-        
+
         internal class AssemblyTypeData
         {
             public bool IsFoldout = false;
