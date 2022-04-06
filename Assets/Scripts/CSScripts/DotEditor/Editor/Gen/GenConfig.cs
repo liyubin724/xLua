@@ -18,8 +18,6 @@ namespace DotEditor.Lua
         private List<GenAssemblyInfo> m_SelectedAssemblyInfos = new List<GenAssemblyInfo>();
         public Dictionary<string, GenAssemblyInfo> SelectedAssemblyInfoDic = new Dictionary<string, GenAssemblyInfo>();
 
-        public List<string> AssemblyNames = new List<string>();
-        
         public List<string> LuaCallCSharpTypes = new List<string>();
         public List<string> CSharpCallLuaTypes = new List<string>();
         public List<string> GCOptimizeTypes = new List<string>();

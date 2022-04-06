@@ -151,6 +151,8 @@ namespace DotEditor.Lua
                         callTypes.Add(AssemblyUtility.GetTypeByFullName(typeFullName));
                     }
                 }
+
+
                 return callTypes;
             }
         }

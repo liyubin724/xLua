@@ -58,7 +58,7 @@ namespace DotEditor.Lua
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var assembly in assemblies)
             {
-                if (!genConfig.SelectedAssemblyInfoDic.TryGetValue(assembly.FullName, out var assemblyInfo))
+                if (!genConfig.SelectedAssemblyInfoDic.TryGetValue(assembly.GetName().Name, out var assemblyInfo))
                 {
                     continue;
                 }

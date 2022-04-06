@@ -37,7 +37,14 @@ namespace DotEditor.Lua
             "Mono.Posix",
             "Mono.Security",
             "ExCSS.Unity",
-            "log4net"
+            "log4net",
+            "Unity.Legacy.NRefactory",
+            "Unity.Plastic.Antlr3.Runtime",
+            "Unity.Plastic.Newtonsoft.Json",
+            "UnityEngine.ClothModule",
+            "UnityEngine.IMGUIModule",
+            "UnityEngine.TerrainModule",
+            "UnityEngine.TerrainPhysicsModule",
         };
         private List<string> m_IgnoreNSNames = new List<string>()
         {
@@ -47,7 +54,8 @@ namespace DotEditor.Lua
             "Editor",
             "Test",
             "Tutorial",
-            "Microsoft"
+            "Microsoft",
+            "Mono"
         };
 
         public Action ClosedCallback { get; set; }
@@ -55,7 +63,10 @@ namespace DotEditor.Lua
         private void OnEnable()
         {
             List<Assembly> assemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                         where assembly.GetName().Name.IndexOf("Editor") < 0 && m_IgnoreAssemblyNames.IndexOf(assembly.GetName().Name) < 0
+                                         let assemblyName = assembly.GetName().Name
+                                         where assemblyName.IndexOf("Editor") < 0 
+                                                && assemblyName.IndexOf("Test") <0
+                                                && m_IgnoreAssemblyNames.IndexOf(assemblyName) < 0
                                          select assembly).ToList();
             assemblies.Sort((item1, item2) =>
             {
@@ -73,7 +84,7 @@ namespace DotEditor.Lua
                                select type.Namespace).Distinct().ToList();
 
                 GenAssemblyInfo assemblyInfo = new GenAssemblyInfo();
-                assemblyInfo.AssemblyName = assembly.FullName;
+                assemblyInfo.AssemblyName = assembly.GetName().Name;
                 foreach (var nsName in nsNames)
                 {
                     bool isValid = true;
