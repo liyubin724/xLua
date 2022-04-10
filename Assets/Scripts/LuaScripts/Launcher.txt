@@ -14,10 +14,21 @@ function Launcher.DoStart()
         shop_type = 11,
         page_number = 23
     }
-    local bytes = PBProxy.Encode("game.net.protos.ShopListRequest", shopListRequest)
+    -- local bytes = PBProxy.Encode("game.net.protos.ShopListRequest", shopListRequest)
 
-    local data = PBProxy.Decode("game.net.protos.ShopListRequest", bytes)
-    print(string.format("%d", data.shop_type))
+    -- local data = PBProxy.Decode("game.net.protos.ShopListRequest", bytes)
+    -- print(string.format("%d", data.shop_type))
+
+    local request = {
+        request_login = {
+            token = "FFFFF"
+        }
+    }
+
+    local bytes = PBProxy.Encode("kgs.gateway.Request", request)
+    local data = PBProxy.Decode("kgs.gateway.Request", bytes)
+    print(string.format("----%s----", data.request_login.token))
+    print(string.format("----%s----", tostring(data.request_heartbeat)))
 end
 
 function Launcher.DoUpdate(deltaTime, unscaleDeltaTime)
