@@ -50,6 +50,10 @@ namespace DotEditor.Lua
                 types.Add(typeof(Action));
                 types.Add(typeof(Action<float, float>));
                 types.Add(typeof(Func<string, LuaTable>));
+                types.Add(typeof(Func<LuaTable, object, bool>));
+                types.Add(typeof(Func<LuaTable, object, int>));
+                types.Add(typeof(Action<LuaTable, int>));
+                types.Add(typeof(Action<LuaTable, int, object>));
 
                 types = types.Distinct().ToList();
                 return types;
@@ -83,6 +87,7 @@ namespace DotEditor.Lua
                 new List<string>(){"UnityEngine.CanvasRenderer", "onRequestRebuild"},
                 new List<string>(){"UnityEngine.Light", "areaSize"},
                 new List<string>(){"UnityEngine.Light", "lightmapBakeType"},
+            new List<string>(){"UnityEngine.Light", "shadowAngle"},
                 new List<string>(){"UnityEngine.WWW", "MovieTexture"},
                 new List<string>(){"UnityEngine.WWW", "GetMovieTexture"},
                 new List<string>(){"UnityEngine.AnimatorOverrideController", "PerformOverrideClipListCleanup"},

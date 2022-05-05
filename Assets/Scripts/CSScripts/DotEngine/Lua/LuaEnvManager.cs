@@ -99,8 +99,10 @@ namespace DotEngine.Lua
 
 #if DEBUG
             Global.Set("isDebug", true);
+            Env.SetCustomPanic(PanicActionType.Abort);
 #else
             Global.Set("isDebug", false);
+            Env.SetCustomPanic(PanicActionType.Continue);
 #endif
             string scriptRootDir = string.Empty;
 #if UNITY_EDITOR

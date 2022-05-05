@@ -11,6 +11,7 @@ namespace DotEngine.Lua
         Float,
         String,
         UObject,
+        UAsset,
     }
 
     [Serializable]
@@ -43,6 +44,11 @@ namespace DotEngine.Lua
                 case LuaParamType.String:
                     return strValue;
                 case LuaParamType.UObject:
+                case LuaParamType.UAsset:
+                    if (uObject == null)
+                    {
+                        return null;
+                    }
                     return uObject;
                 default:
                     return null;

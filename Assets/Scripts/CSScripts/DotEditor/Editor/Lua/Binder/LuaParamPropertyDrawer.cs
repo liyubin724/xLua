@@ -70,6 +70,11 @@ namespace DotEditor.Lua
                 SerializedProperty valueProperty = property.FindPropertyRelative("strValue");
                 EditorGUI.PropertyField(propertyDrawRect, valueProperty);
             }
+            else if (paramType == LuaParamType.UAsset)
+            {
+                SerializedProperty uObjectProperty = property.FindPropertyRelative("uObject");
+                EditorGUI.PropertyField(propertyDrawRect, uObjectProperty);
+            }
             else if (paramType == LuaParamType.UObject)
             {
                 SerializedProperty gObjectProperty = property.FindPropertyRelative("gObject");

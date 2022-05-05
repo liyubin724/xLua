@@ -26,6 +26,9 @@ namespace XLua
         protected readonly int luaReference;
         protected readonly LuaEnv luaEnv;
 
+        public int LuaReference => luaReference;
+        public LuaEnv Env => luaEnv;
+
 #if UNITY_EDITOR || XLUA_GENERAL
         protected int _errorFuncRef { get { return luaEnv.errorFuncRef; } }
         protected RealStatePtr _L { get { return luaEnv.L; } }

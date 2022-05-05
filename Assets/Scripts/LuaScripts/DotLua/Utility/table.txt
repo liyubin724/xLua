@@ -1,16 +1,16 @@
-local serpent = require('DotLua/Tool/serpent')
-local table = _G.table;
+local serpent = require("DotLua/Tool/serpent")
+local table = _G.table
 
 ----public----
 --将table转换为字符串
 --@param tbl:需要输出的table
 function table.tostring(tbl)
     if not tbl then
-        return 'nil'
+        return "nil"
     end
 
-    if type(tbl) == 'table' then
-        return serpent.dump(tbl)
+    if type(tbl) == "table" then
+        return serpent.line(tbl, {indent = "    "})
     end
 
     return tostring(tbl)
@@ -35,13 +35,13 @@ end
 --判断table是否是数组
 --@tbl
 function table.isarray(tbl)
-    if type(tbl) ~= 'table' then
+    if type(tbl) ~= "table" then
         return false
     end
 
     local n = #tbl
     for i, _ in pairs(tbl) do
-        if type(i) ~= 'number' then
+        if type(i) ~= "number" then
             return false
         end
 
@@ -57,7 +57,7 @@ end
 --清空Table的内容
 --@param tbl
 function table.clear(tbl)
-    if not tbl or type(tbl) ~= 'table' then
+    if not tbl or type(tbl) ~= "table" then
         return
     end
 
