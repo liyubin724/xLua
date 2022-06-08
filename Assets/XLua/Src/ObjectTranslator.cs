@@ -1189,6 +1189,18 @@ namespace XLua
                     Push(L, o);
                 }
             }
+            else if (o is UnityEngine.Object)
+            {
+                var uObject = o as UnityEngine.Object;
+                if (uObject == null)
+                {
+                    LuaAPI.lua_pushnil(L);
+                }
+                else
+                {
+                    Push(L, o);
+                }
+            }
             else
             {
                 Push(L, o);

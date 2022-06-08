@@ -4,6 +4,39 @@ local PBProxy = require("DotLua/PB/PBProxy")
 
 local Logger = _G.Logger
 
+a_value = 1
+
+httpData = {
+    stringValue = "TTF001",
+    shortValue = 12,
+    intValue = 22,
+    boolValue = true,
+    longValue = 1123,
+    byteValue = 1,
+    uType = 0,
+
+    stringList = {
+    "a",
+    "b",
+    "c"
+    },
+    userValue = {
+        guid = 1111,
+        intValue = 2222,
+    },
+
+    userList = {
+        {
+            guid = 1111,
+            intValue = 11111,
+        },
+        {
+            guid = 3333333,
+            intValue = 11111,
+        },
+    }
+}
+
 local Launcher = {}
 Launcher.__index = Launcher
 
@@ -27,6 +60,7 @@ function Launcher.DoStart()
 
     local bytes = PBProxy.Encode("kgs.gateway.Request", request)
     local data = PBProxy.Decode("kgs.gateway.Request", bytes)
+    print(table.tostring(data))
     print(string.format("----%s----", data.request_login.token))
     print(string.format("----%s----", tostring(data.request_heartbeat)))
 end

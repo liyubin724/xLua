@@ -43,7 +43,7 @@ namespace XLua
 
         private LuaTable _G;
 
-        internal ObjectTranslator translator;
+        public ObjectTranslator translator;
 
         internal int errorFuncRef = -1;
 
